@@ -1,99 +1,73 @@
-const { v4: uuidv4 } = require('uuid');
-const Task = require('./task');
-const { saveFile, readFile } = require('../helpers/crudFile');
-
-// lista de tareas
 class Tasks {
+  _listNumberToSumNumberToSum = [];
+  _listPairsSum = [];
+  _result = 0;
 
-    _list = {};
+  get getlistArray() {
+    const listArr = this._listNumberToSum;
+    return listArr;
+  }
 
-    get getlistArray(){
+  constructor(_listNumberToSum) {
+    this._listNumberToSum = [];
+  }
 
-        const listArr = [];
-        Object.keys(this._list).forEach( key=>{
-            const task = this._list[key];
-            listArr.push(task);
-        });
+  header(label) {
+    console.log("=====================================".america);
+    console.log(`${label}`.america);
+    console.log("=====================================\n".america);
+  }
 
-        return listArr;
+  addNumber = (number = 0) => {
+    this._listPairsSum = [];
+    const exist = this._listNumberToSum.some((numb) => numb == number);
+
+    if (exist) {
+      return console.log("Number Already Exists");
     }
 
+    this._listNumberToSum.push(Number(number));
+  };
 
-    constructor(_list){
-        this._list = {};
+  listNumbers = (list = this.getlistArray) => {
+    this.header("List Of Number");
+    if (list == 0) {
+      return console.log("Please add numbers".red, "\n");
     }
+    console.log("[".white + `${list}`.green + "]".white);
+  };
 
-    loadTasks = (tasks = [])=> {
-        tasks.forEach( task => this._list[task.id] = task);
+  findsPairs = (result) => {
+    this._result = result;
+    this.getlistArray.forEach((num, index, array) => {
+      const currentNumber = num;
+      const currentIndex = index;
+      array.forEach((num, index) => {
+        const sum = currentNumber ? currentNumber + num : null;
+        if (sum && index != currentIndex && sum == result) {
+          this._listPairsSum.push(...[currentNumber, num].sort());
+          const removeDuplicate = new Set(this._listPairsSum);
+          const result = [...removeDuplicate];
+          this._listPairsSum = result;
+        }
+      });
+    });
+  };
+
+  listPairsSum = () => {
+    this.header("List Of Pairs Sum");
+    console.log(`Expected Result : ${this._result}`.brightGreen, "\n");
+
+    if (this._listPairsSum.length == 0) {
+      return console.log("Results not found".red, "\n");
     }
-
-    deleteTask = (id = '') => {
-        if(this._list[id]) delete this._list[id];
-        saveFile(this.getlistArray);
-    }
-
-
-
-    createTask = ( desc ='' )=>{
-        const task = new Task(desc);
-        this._list[task.id] = task;
-        saveFile(this.getlistArray);
-    } 
-
-
-    listFullTask = ( list = this.getlistArray )=> {
-
-        console.log();
-        list.forEach((el, i) =>{
-
-            const idx = `${i+1}`.green
-            const {desc,completedIn} = el;
-            const statusTask = (completedIn)
-                         ? `${completedIn}`.green
-                         : 'Pendiente'.red;
-
-            console.log(`${idx}.${desc} :: ${statusTask}`);
-
-        });
-    }
-
-
-    listPendingCompleted = ( completed = true )=>{
-        const list = this.getlistArray;
-        const resultList = list.filter(({completedIn} = el) => (completed) ? completedIn : completedIn==null);
-        this.listFullTask(resultList);
-    }
-
-
-    toogleCompletedTask = ( ids = []) => {
-
-        ids.forEach((id) => {
-            const task = this._list[id];
-
-            if (!task.completedIn) {
-                task.completedIn = new Date().toISOString();
-            }
-
-        });
-
-
-        this.getlistArray.forEach( task =>{
-
-            if (!ids.includes(task.id)) {
-                this._list[task.id].completedIn = null;
-            }
-        });
-
-        saveFile(this.getlistArray);
-
-
-      
-    }
-
-
-
-
-
+    this._listPairsSum.map((number, index, arr) => {
+      const result = number + arr[index + 1];
+      if (result == this._result) {
+        return console.log("+".green, `${number},${arr[index + 1]}`.cyan);
+      }
+    });
+  };
 }
 
 module.exports = Tasks;
