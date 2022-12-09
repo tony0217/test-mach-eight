@@ -19,7 +19,7 @@ node app.js
 4. select Add Number
 
 <p align="center" style="background: black">
-   <a href="https://i.ibb.co/d6X8Qjj/Captura-desde-2022-12-08-22-24-28.png" width="200" alt="mach Logo" /></a>
+   <a href="https://ibb.co/5vCb5GG" width="200" alt="mach Logo" /></a>
 </p>
 
 
